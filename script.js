@@ -19,21 +19,17 @@ function resetPlayer() {
 function moveBottles() {
     bottles.forEach(bottle => {
         let bottleX = Math.random() * (window.innerWidth - 50);
-        let bottleY = window.innerHeight + 100;
         bottle.style.left = `${bottleX}px`;
-        bottle.style.bottom = `-${bottleY}px`;
+        bottle.style.bottom = '0';
 
         function animateBottle() {
-            bottleY -= speed;
-            bottle.style.bottom = `${-bottleY}px`;
-
-            if (bottleY < -100) {
-                bottleY = window.innerHeight + 100;
-                bottleX = Math.random() * (window.innerWidth - 50);
-                bottle.style.left = `${bottleX}px`;
+            bottleX -= speed;
+            if (bottleX < -50) {
+                bottleX = window.innerWidth;
             }
+            bottle.style.left = `${bottleX}px`;
 
-            checkCollision(bottleX, bottleY);
+            checkCollision(bottleX, 0);
             requestAnimationFrame(animateBottle);
         }
 
@@ -60,6 +56,7 @@ function gameLoop() {
 
     if (playerY > window.innerHeight) {
         playerY = -50;
+        resetPlayer();
     }
 
     requestAnimationFrame(gameLoop);
