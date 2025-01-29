@@ -1,89 +1,80 @@
-const game = document.getElementById('game');
 const player = document.getElementById('player');
-const scoreElement = document.getElementById('score');
-let playerX = 50; // Начальная позиция игрока по X
-let playerY = 0; // Начальная позиция игрока по Y
-let speed = 2; // Скорость падения
-let score = 0; // Счет
-let bottles = []; // Массив для бутылок
-let gameInterval;
+const bottles = [
+    document.getElementById('champagne-bottle-1'),
+    document.getElementById('champagne-bottle-2'),
+    document.getElementById('champagne-bottle-3')
+];
 
-// Создаем бутылки
-function createBottles() {
-  for (let i = 0; i < 3; i++) {
-    const bottle = document.createElement('div');
-    bottle.className = 'bottle';
-    bottle.style.left = `${Math.random() * 80}vw`; // Случайная позиция по X
-    bottle.style.bottom = '0';
-    game.appendChild(bottle);
-    bottles.push(bottle);
-  }
-}
+let playerX = window.innerWidth / 2 - 25; // Центр экрана
+let playerY = 0;
+let speed = 1; // Начальная скорость
+let interval;
 
-// Движение бутылок
-function moveBottles() {
-  bottles.forEach(bottle => {
-    let x = parseFloat(bottle.style.left);
-    x += (Math.random() - 0.5) * 4; // Случайное движение влево/вправо
-    if (x < 0) x = 0;
-    if (x > 95) x = 95;
-    bottle.style.left = `${x}vw`;
-  });
-}
-
-// Падение игрока
-function fallPlayer() {
-  playerY += speed;
-  player.style.top = `${playerY}px`;
-
-  // Проверка столкновения
-  bottles.forEach(bottle => {
-    const bottleRect = bottle.getBoundingClientRect();
-    const playerRect = player.getBoundingClientRect();
-    if (
-      playerRect.bottom >= bottleRect.top &&
-      playerRect.top <= bottleRect.bottom &&
-      playerRect.right >= bottleRect.left &&
-      playerRect.left <= bottleRect.right
-    ) {
-      endGame();
-    }
-  });
-
-  // Если игрок достиг низа
-  if (playerY + 50 > window.innerHeight) {
+function resetPlayer() {
+    playerX = window.innerWidth / 2 - 25;
     playerY = 0;
-    speed += 0.5; // Увеличиваем скорость
-    score += 1; // Увеличиваем счет
-    scoreElement.innerText = `Счет: ${score}`;
-  }
+    speed += 0.1; // Увеличиваем скорость каждый раз при перезапуске
 }
 
-// Управление игроком
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'ArrowLeft' && playerX > 0) {
-    playerX -= 10;
-  }
-  if (e.key === 'ArrowRight' && playerX < window.innerWidth - 50) {
-    playerX += 10;
-  }
-  player.style.left = `${playerX}px`;
+function moveBottles() {
+    bottles.forEach(bottle => {
+        let bottleX = Math.random() * (window.innerWidth - 50);
+        let bottleY = window.innerHeight + 100;
+        bottle.style.left = `${bottleX}px`;
+        bottle.style.bottom = `-${bottleY}px`;
+
+        function animateBottle() {
+            bottleY -= speed;
+            bottle.style.bottom = `${-bottleY}px`;
+
+            if (bottleY < -100) {
+                bottleY = window.innerHeight + 100;
+                bottleX = Math.random() * (window.innerWidth - 50);
+                bottle.style.left = `${bottleX}px`;
+            }
+
+            checkCollision(bottleX, bottleY);
+            requestAnimationFrame(animateBottle);
+        }
+
+        animateBottle();
+    });
+}
+
+function checkCollision(bottleX, bottleY) {
+    if (
+        playerX < bottleX + 50 &&
+        playerX + 50 > bottleX &&
+        playerY < bottleY + 100 &&
+        playerY + 50 > bottleY
+    ) {
+        alert('Game Over!');
+        resetPlayer();
+    }
+}
+
+function gameLoop() {
+    playerY += speed;
+    player.style.top = `${playerY}px`;
+    player.style.left = `${playerX}px`;
+
+    if (playerY > window.innerHeight) {
+        playerY = -50;
+    }
+
+    requestAnimationFrame(gameLoop);
+}
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') {
+        playerX = Math.max(playerX - 20, 0);
+    } else if (e.key === 'ArrowRight') {
+        playerX = Math.min(playerX + 20, window.innerWidth - 50);
+    }
+    player.style.left = `${playerX}px`;
 });
 
-// Завершение игры
-function endGame() {
-  alert(`Игра окончена! Ваш счет: ${score}`);
-  clearInterval(gameInterval);
-  location.reload(); // Перезагрузка страницы для новой игры
-}
-
-// Запуск игры
-function startGame() {
-  createBottles();
-  gameInterval = setInterval(() => {
-    fallPlayer();
-    moveBottles();
-  }, 20);
-}
-
-startGame();
+// Инициализация игры
+resetPlayer();
+moveBottles();
+gameLoop();
