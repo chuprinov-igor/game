@@ -6,24 +6,41 @@ const bottles = [
 ];
 let playerX = window.innerWidth / 2 - 25; // Центр экрана
 let playerY = 0;
-let speed = 1; // Начальная скорость
+let playerSpeed = 1; // Начальная скорость падения игрока
+let bottleSpeed = 1; // Начальная скорость движения бутылок
 let score = 0;
 let startTime = Date.now();
+let scoreInterval;
+let passes = 0;
+const maxPlayerSpeed = 64; // Максимальная скорость падения игрока
+const maxBottleSpeed = 10; // Максимальная скорость движения бутылок
+const gameOverModal = document.getElementById('game-over-modal');
+const finalScoreText = document.getElementById('final-score-text');
 
 function resetPlayer() {
     playerX = window.innerWidth / 2 - 25;
     playerY = 0;
-    speed = 1; // Сброс скорости до начальной
-    score = 0; // Обнуление счета
+    playerSpeed = 1; // Сброс скорости падения игрока до начальной
+    bottleSpeed = 1; // Сброс скорости движения бутылок до начальной
+    passes = 0; // Обнуление количества проходов
+    clearInterval(scoreInterval); // Остановка таймера при сбросе
     startTime = Date.now(); // Сброс времени начала игры
     updateScore();
+    hideGameOverModal(); // Скрыть модальное окно после перезапуска игры
+    // Возвращаем стили игрока и бутылок в исходное состояние
+    player.style.top = `${playerY}px`;
+    player.style.left = `${playerX}px`;
+    bottles.forEach(bottle => {
+        bottle.style.left = '0px';
+        bottle.style.bottom = '0px';
+    });
 }
 
 function moveBottles() {
     const sections = [
-        { start: 0, end: window.innerWidth / 3 },
-        { start: window.innerWidth / 3, end: 2 * window.innerWidth / 3 },
-        { start: 2 * window.innerWidth / 3, end: window.innerWidth }
+        { start: 0, end: window.innerWidth / 3 * 1.25 },
+        { start: window.innerWidth / 3 * 0.75, end: window.innerWidth / 3 * 2.25 },
+        { start: window.innerWidth / 3 * 1.75, end: window.innerWidth }
     ];
 
     bottles.forEach((bottle, index) => {
@@ -40,11 +57,13 @@ function moveBottles() {
                 direction = 1;
             }
 
-            bottleX += direction * speed;
+            bottleX += direction * bottleSpeed;
             bottle.style.left = `${bottleX}px`;
 
             checkCollision(bottle);
-            requestAnimationFrame(animateBottle);
+            if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+                requestAnimationFrame(animateBottle);
+            }
         }
 
         animateBottle();
@@ -61,13 +80,12 @@ function checkCollision(bottle) {
         playerRect.bottom > bottleRect.top &&
         playerRect.top < bottleRect.bottom
     ) {
-        alert('Game Over!');
-        resetPlayer();
+        showGameOverModal();
     }
 }
 
 function gameLoop() {
-    playerY += speed * 2; // Удвоенная скорость падения игрока
+    playerY += playerSpeed * 2; // Удвоенная скорость падения игрока
     player.style.top = `${playerY}px`;
 
     // Проверка перехода через левую и правую границы экрана
@@ -81,39 +99,80 @@ function gameLoop() {
 
     if (playerY > window.innerHeight) {
         playerY = -50;
-        resetPlayer();
-        score++;
+        passes++;
+        if (playerSpeed < maxPlayerSpeed) {
+            playerSpeed *= 2; // Увеличиваем скорость падения игрока после каждого прохода через экран, если она меньше максимальной
+        }
+        if (bottleSpeed < maxBottleSpeed) {
+            bottleSpeed *= 1.2; // Увеличиваем скорость движения бутылок после каждого прохода через экран, если она меньше максимальной
+        }
         updateScore();
     }
 
-    requestAnimationFrame(gameLoop);
+    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') {
-        playerX -= 20;
-    } else if (e.key === 'ArrowRight') {
-        playerX += 20;
-    }
+    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+        if (e.key === 'ArrowLeft') {
+            playerX -= 20;
+        } else if (e.key === 'ArrowRight') {
+            playerX += 20;
+        }
 
-    // Проверяем и корректируем координаты игрока с учетом переходов через границы
-    if (playerX < -25) {
-        playerX = window.innerWidth - 25;
-    } else if (playerX > window.innerWidth - 25) {
-        playerX = -25;
-    }
+        // Проверяем и корректируем координаты игрока с учетом переходов через границы
+        if (playerX < -25) {
+            playerX = window.innerWidth - 25;
+        } else if (playerX > window.innerWidth - 25) {
+            playerX = -25;
+        }
 
-    player.style.left = `${playerX}px`;
+        player.style.left = `${playerX}px`;
+    }
 });
 
 function updateScore() {
     const currentTime = (Date.now() - startTime) / 1000; // Время в секундах
-    const scoreValue = Math.floor(currentTime * score); // Суммируется секунда игры умноженная на коэффициент
-    document.getElementById('score-value').textContent = scoreValue;
+    score = Math.floor(currentTime * (passes + 1)); // Обновляем счет
+    document.getElementById('score-value').textContent = score; // Обновляем счет на экране
 }
+
+function startScoreTimer() {
+    scoreInterval = setInterval(() => {
+        if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+            updateScore();
+        }
+    }, 1000);
+}
+
+// Функции для работы с модальным окном
+function showGameOverModal() {
+    const finalScore = score; // Используем общий счет
+    finalScoreText.textContent = `YOUR SCORES: ${finalScore}`;
+    gameOverModal.style.display = 'flex';
+    // Останавливаем все движение и обновления
+    cancelAnimationFrame(gameLoop);
+    clearInterval(scoreInterval);
+}
+
+function hideGameOverModal() {
+    gameOverModal.style.display = 'none';
+}
+
+document.getElementById('play-again-button').addEventListener('click', () => {
+    hideGameOverModal();
+    resetPlayer();
+    moveBottles();
+    gameLoop();
+    startScoreTimer();
+    updateScore();
+});
 
 // Инициализация игры
 resetPlayer();
 moveBottles();
 gameLoop();
+startScoreTimer(); // Запуск таймера для начисления очков
 updateScore(); // Обновление начального значения счета
