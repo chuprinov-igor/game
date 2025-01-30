@@ -14,9 +14,42 @@ body {
 .bottle {
     position: absolute;
     bottom: 0;
-    width: 50px;
-    height: 100px;
-    background-color: brown;
+    width: 40px; /* Ширина основания бутылки */
+    height: 150px; /* Высота всей бутылки */
+}
+
+.neck {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15px; /* Ширина горлышка */
+    height: 30px; /* Высота горлышка */
+    background-color: #4CAF50; /* Цвет горлышка */
+    border-radius: 5px 5px 0 0; /* Закругление верхней части горлышка */
+}
+
+.body {
+    position: absolute;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px; /* Ширина основания бутылки */
+    height: 90px; /* Высота основания бутылки */
+    background-color: #4CAF50; /* Цвет основания бутылки */
+    border-radius: 10px 10px 20px 20px; /* Закругление углов основания */
+}
+
+.label {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px; /* Ширина этикетки */
+    height: 20px; /* Высота этикетки */
+    background-color: #FFEB3B; /* Цвет этикетки */
+    border-radius: 5px; /* Закругление углов этикетки */
+    z-index: 1; /* Убедитесь, что этикетка находится поверх основания */
 }
 
 .player {
@@ -35,4 +68,54 @@ body {
     right: 10px;
     font-size: 20px;
     color: black;
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none; /* По умолчанию скрыто */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column; /* Элементы будут расположены вертикально */
+    align-items: center; /* Центрируем элементы по горизонтали */
+}
+
+#game-over-text {
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px; /* Отступ между элементами */
+}
+
+#final-score-text {
+    font-size: 24px;
+    margin-bottom: 20px; /* Отступ между элементами */
+}
+
+#play-again-button {
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+#play-again-button:hover {
+    background-color: #45a049;
 }
