@@ -8,14 +8,33 @@
 </head>
 <body>
     <div id="game-container">
-        <div id="champagne-bottle-1" class="bottle"></div>
-        <div id="champagne-bottle-2" class="bottle"></div>
-        <div id="champagne-bottle-3" class="bottle"></div>
+        <div id="champagne-bottle-1" class="bottle">
+            <div class="neck"></div>
+            <div class="body"></div>
+            <div class="label"></div>
+        </div>
+        <div id="champagne-bottle-2" class="bottle">
+            <div class="neck"></div>
+            <div class="body"></div>
+            <div class="label"></div>
+        </div>
+        <div id="champagne-bottle-3" class="bottle">
+            <div class="neck"></div>
+            <div class="body"></div>
+            <div class="label"></div>
+        </div>
         <div id="player" class="player"></div>
     </div>
     <div id="score-panel">
         <span id="scores-label">SCORES:</span>
         <span id="score-value">0</span>
+    </div>
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <span id="game-over-text">GAME OVER</span>
+            <span id="final-score-text">YOUR SCORES: 0</span>
+            <button id="play-again-button">PLAY AGAIN</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
