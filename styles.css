@@ -2,54 +2,41 @@ body {
     margin: 0;
     overflow: hidden;
     position: relative;
+    background: url('images/background.svg') no-repeat center center fixed; /* Добавляем векторное изображение */
+    background-size: cover; /* Масштабируем изображение, чтобы оно покрывало весь экран */
 }
 
 #game-container {
     position: absolute;
     width: 100vw;
     height: 100vh;
-    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Выравниваем элементы по верхней части контейнера */
+    pointer-events: none; /* Убираем взаимодействие с контейнером, чтобы оно не мешало игре */
+}
+
+.sun {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #FFD700, #FFA500); /* Градиент для солнца */
+    border-radius: 50%;
+    box-shadow: 0 0 50px rgba(255, 215, 0, 0.5); /* Добавляем светящийся эффект */
+    z-index: 1; /* Убедитесь, что солнце находится поверх фона */
 }
 
 .bottle {
     position: absolute;
-    bottom: 0;
-    width: 40px; /* Ширина основания бутылки */
-    height: 150px; /* Высота всей бутылки */
-}
-
-.neck {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 15px; /* Ширина горлышка */
-    height: 30px; /* Высота горлышка */
-    background-color: #4CAF50; /* Цвет горлышка */
-    border-radius: 5px 5px 0 0; /* Закругление верхней части горлышка */
-}
-
-.body {
-    position: absolute;
-    top: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px; /* Ширина основания бутылки */
-    height: 90px; /* Высота основания бутылки */
-    background-color: #4CAF50; /* Цвет основания бутылки */
-    border-radius: 10px 10px 20px 20px; /* Закругление углов основания */
-}
-
-.label {
-    position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px; /* Ширина этикетки */
-    height: 20px; /* Высота этикетки */
-    background-color: #FFEB3B; /* Цвет этикетки */
-    border-radius: 5px; /* Закругление углов этикетки */
-    z-index: 1; /* Убедитесь, что этикетка находится поверх основания */
+    bottom: 0; /* Бутылка прижата к нижней части экрана */
+    width: 35px; /* Ширина бутылки */
+    height: 150px; /* Высота бутылки */
+    background: url('images/bottle.svg') no-repeat center center; /* Векторное изображение бутылки */
+    background-size: contain; /* Масштабируем изображение */
+    z-index: 2; /* Убедитесь, что бутылки находятся поверх фона */
+    pointer-events: auto; /* Возвращаем взаимодействие для бутылок */
 }
 
 .player {
@@ -57,10 +44,33 @@ body {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background-color: red;
+    width: 200px; /* Ширина игрока */
+    height: 300px; /* Высота игрока */
+    background: url('images/player.svg') no-repeat center center; /* Векторное изображение игрока */
+    background-size: contain; /* Масштабируем изображение */
+    z-index: 3; /* Игрок поверх всех элементов */
+
 }
+
+#player, .bottle {
+    outline: 2px solid red; /* Временная граница для отладки */
+}
+
+@keyframes collisionMove {
+    from {
+        left: var(--collision-start-x);
+        top: var(--collision-start-y);
+    }
+    to {
+        left: var(--collision-end-x);
+        top: var(--collision-end-y);
+    }
+}
+
+.player-collision {
+    animation: collisionMove 0.5s ease-in-out forwards;
+}
+
 
 #score-panel {
     position: absolute;
@@ -68,13 +78,14 @@ body {
     right: 10px;
     font-size: 20px;
     color: black;
+    z-index: 4; /* Убедитесь, что панель счета находится поверх всех других элементов */
 }
 
 /* Стили для модального окна */
 .modal {
     display: none; /* По умолчанию скрыто */
     position: fixed;
-    z-index: 1;
+    z-index: 5; /* Убедитесь, что модальное окно находится поверх всех других элементов */
     left: 0;
     top: 0;
     width: 100%;
