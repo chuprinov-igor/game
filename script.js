@@ -6,7 +6,7 @@ const bottles = [
 ];
 let playerX = window.innerWidth / 2 - 25; // Центр экрана
 let playerY = 0;
-let playerSpeed = 1; // Начальная скорость падения игрока
+let playerSpeed = 2; // Начальная скорость падения игрока
 let bottleSpeed = 1; // Начальная скорость движения бутылок
 let score = 0;
 let startTime = Date.now();
@@ -20,7 +20,7 @@ const finalScoreText = document.getElementById('final-score-text');
 function resetPlayer() {
     playerX = window.innerWidth / 2 - 25;
     playerY = 0;
-    playerSpeed = 1; // Сброс скорости падения игрока до начальной
+    playerSpeed = 2; // Сброс скорости падения игрока до начальной
     bottleSpeed = 1; // Сброс скорости движения бутылок до начальной
     passes = 0; // Обнуление количества проходов
     clearInterval(scoreInterval); // Остановка таймера при сбросе
@@ -73,16 +73,42 @@ function moveBottles() {
 function checkCollision(bottle) {
     const playerRect = player.getBoundingClientRect();
     const bottleRect = bottle.getBoundingClientRect();
-
+    // Проверяем столкновение между игроком и бутылкой
     if (
-        playerRect.right > bottleRect.left &&
-        playerRect.left < bottleRect.right &&
-        playerRect.bottom > bottleRect.top &&
-        playerRect.top < bottleRect.bottom
+    playerRect.right > bottleRect.left &&
+    playerRect.left < bottleRect.right &&
+    playerRect.bottom > bottleRect.top &&
+    playerRect.top < bottleRect.bottom
     ) {
-        showGameOverModal();
-    }
+
+        // Сохраняем текущую позицию
+        player.style.setProperty('--collision-start-x', `${playerX}px`);
+        player.style.setProperty('--collision-start-y', `${playerY}px`);
+
+
+ // Устанавливаем новую целевую позицию
+ const targetX = bottleRect.left + bottleRect.width / 2;
+ const targetY = bottleRect.bottom - player.offsetHeight;
+ 
+ player.style.setProperty('--collision-end-x', `${targetX}px`);
+ player.style.setProperty('--collision-end-y', `${targetY}px`);
+ 
+ // Добавляем класс анимации
+ player.classList.add('player-collision');
+ 
+  // Фиксируем финальную позицию после анимации
+  setTimeout(() => {
+    player.style.left = `${targetX}px`;
+    player.style.top = `${targetY}px`;
+    playerX = targetX;
+    playerY = targetY;
+    
+    showGameOverModal();
+    player.classList.remove('player-collision');
+}, 500);
 }
+}
+
 
 function gameLoop() {
     playerY += playerSpeed * 2; // Удвоенная скорость падения игрока
@@ -101,7 +127,7 @@ function gameLoop() {
         playerY = -50;
         passes++;
         if (playerSpeed < maxPlayerSpeed) {
-            playerSpeed *= 2; // Увеличиваем скорость падения игрока после каждого прохода через экран, если она меньше максимальной
+            playerSpeed *= 1.4; // Увеличиваем скорость падения игрока после каждого прохода через экран, если она меньше максимальной
         }
         if (bottleSpeed < maxBottleSpeed) {
             bottleSpeed *= 1.2; // Увеличиваем скорость движения бутылок после каждого прохода через экран, если она меньше максимальной
@@ -149,13 +175,18 @@ function startScoreTimer() {
 
 // Функции для работы с модальным окном
 function showGameOverModal() {
-    const finalScore = score; // Используем общий счет
+    const finalScore = score;
     finalScoreText.textContent = `YOUR SCORES: ${finalScore}`;
+    
+    // Remove collision animation class before showing modal
+    player.classList.remove('player-collision');
+    
     gameOverModal.style.display = 'flex';
-    // Останавливаем все движение и обновления
     cancelAnimationFrame(gameLoop);
     clearInterval(scoreInterval);
 }
+
+
 
 function hideGameOverModal() {
     gameOverModal.style.display = 'none';
