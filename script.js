@@ -20,6 +20,18 @@ const maxBottleSpeed = 10; // Максимальная скорость движ
 const gameOverModal = document.getElementById('game-over-modal');
 const finalScoreText = document.getElementById('final-score-text');
 
+/* Add this JavaScript to your script.js file */
+function setViewportHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+// Set the height initially
+setViewportHeight();
+
+// Update the height on resize and orientation change
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+
 // Функция для показа нужной страницы
 function showPage(pageId) {
     // Скрываем все страницы
