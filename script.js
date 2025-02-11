@@ -246,6 +246,49 @@ document.getElementById('play-again-button').addEventListener('click', () => {
     startScoreTimer();
     updateScore();
 });
+// Глобальные переменные для отслеживания касаний
+let touchStartX = 0;
+let touchEndX = 0;
+
+// Обработчик начала касания
+document.addEventListener('touchstart', (e) => {
+    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+        touchStartX = e.touches[0].clientX; // Сохраняем начальную координату X
+    }
+});
+
+// Обработчик окончания касания
+document.addEventListener('touchend', (e) => {
+    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+        touchEndX = e.changedTouches[0].clientX; // Сохраняем конечную координату X
+        handleSwipe();
+    }
+});
+
+// Функция для обработки свайпа
+function handleSwipe() {
+    const deltaX = touchEndX - touchStartX; // Разница между начальной и конечной точками
+    const SWIPE_THRESHOLD = 50; // Минимальное расстояние для считывания свайпа
+
+    if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        if (deltaX > 0) {
+            // Свайп вправо
+            playerX += 40; // Перемещаем игрока вправо
+        } else {
+            // Свайп влево
+            playerX -= 40; // Перемещаем игрока влево
+        }
+
+        // Проверяем границы экрана
+        if (playerX < -25) {
+            playerX = window.innerWidth - 25;
+        } else if (playerX > window.innerWidth - 25) {
+            playerX = -25;
+        }
+
+        player.style.left = `${playerX}px`; // Обновляем позицию игрока
+    }
+}
 
 /*// Инициализация игры
 resetPlayer();
