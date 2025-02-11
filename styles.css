@@ -1,9 +1,16 @@
+/* First, add a CSS variable for viewport height that we can update via JavaScript */
+:root {
+    --vh: 1vh;
+}
+
 body {
     margin: 0;
     overflow: hidden;
     position: relative;
     background: url('images/background.svg') no-repeat center center fixed; /* Добавляем векторное изображение */
     background-size: cover; /* Масштабируем изображение, чтобы оно покрывало весь экран */
+       /* Use the custom viewport height variable */
+       min-height: calc(var(--vh, 1vh) * 100);
 }
 .player-image {
     position: absolute;
@@ -27,11 +34,14 @@ body {
 #game-container {
     position: absolute;
     width: 100vw;
-    height: 100vh;
+   /*height: 100vh;*/
+          /* Use the custom viewport height variable */
+          height: calc(var(--vh, 1vh) * 100);
     display: flex;
     justify-content: center;
     align-items: flex-start; /* Выравниваем элементы по верхней части контейнера */
     pointer-events: none; /* Убираем взаимодействие с контейнером, чтобы оно не мешало игре */
+
 }
 
 .sun {
@@ -48,7 +58,9 @@ body {
 
 .bottle {
     position: absolute;
-    bottom: 0; /* Бутылка прижата к нижней части экрана */
+    /*bottom: 0;  Бутылка прижата к нижней части экрана */
+      /* Adjust bottom positioning to ensure visibility */
+      bottom: calc(var(--vh, 1vh) * 5); /* 5vh from bottom */
     width: 35px; /* Ширина бутылки */
     height: 150px; /* Высота бутылки */
     background: url('images/bottle.svg') no-repeat center center; /* Векторное изображение бутылки */
@@ -282,7 +294,33 @@ h1 span {
         max-width: 90%; /* Ограничиваем ширину заголовка 90% ширины экрана */
         text-align: center; /* Центрируем текст */
     }
+
+    .bottle {
+        /* Ensure bottles are visible on smaller screens */
+        height: calc(var(--vh, 1vh) * 20); /* 20% of viewport height */
+        bottom: calc(var(--vh, 1vh) * 5); /* 5% from bottom */
+    }
+    
+    #game-container {
+        /* Ensure full height on mobile */
+        height: calc(var(--vh, 1vh) * 100);
+        overflow: hidden;
+    }
+
 }
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .bottle {
+        /* Additional bottom spacing for iOS Safari */
+        bottom: calc(var(--vh, 1vh) * 8);
+    }
+    
+    #game-container {
+        /* Prevent bounce scroll on iOS */
+        position: fixed;
+    }
+}
+
 
 /* Landscape mode adjustments */
 @media screen and (max-height: 500px) {
