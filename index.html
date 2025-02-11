@@ -3,39 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Falling Game</title>
+    <title>Save Dimasik's ASS</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container">
-        <div id="champagne-bottle-1" class="bottle">
-            <div class="neck"></div>
-            <div class="body"></div>
-            <div class="label"></div>
-        </div>
-        <div id="champagne-bottle-2" class="bottle">
-            <div class="neck"></div>
-            <div class="body"></div>
-            <div class="label"></div>
-        </div>
-        <div id="champagne-bottle-3" class="bottle">
-            <div class="neck"></div>
-            <div class="body"></div>
-            <div class="label"></div>
-        </div>
-        <div id="player" class="player"></div>
+    <!-- Главная страница -->
+    <div id="home-page" class="page active">
+        <h1>
+            <span>Save</span>
+            <span>Dimasik's</span>
+            <span>ASS!</span>
+        </h1>
+        <button class="start-button" onclick="startGame()">START GAME</button>
+        <button class="about-button" onclick="showAbout()">ABOUT GAME</button>
+        <button class="exit-button" onclick="exitGame()">EXIT</button>
+        <img src="images/player.svg" alt="Player" class="player-image">
     </div>
-    <div id="score-panel">
-        <span id="scores-label">SCORES:</span>
-        <span id="score-value">0</span>
+
+ 
+
+    <!-- Страница с правилами -->
+    <div id="rules" class="page hidden">
+        <h2>Правила игры</h2>
+        <p>
+            В этой игре вы управляете персонажем, который падает сверху вниз.<br>
+            Ваша задача — избегать сталкивания с бутылками.<br>
+            Используйте стрелки "Влево" и "Вправо" для перемещения.<br>
+            Чем дольше вы продержитесь, тем больше очков наберете!
+        </p>
+        <button onclick="showPage('home-page')">Назад</button>
     </div>
-    <div id="game-over-modal" class="modal">
-        <div class="modal-content">
-            <span id="game-over-text">GAME OVER</span>
-            <span id="final-score-text">YOUR SCORES: 0</span>
-            <button id="play-again-button">PLAY AGAIN</button>
+
+    <!-- Страница с благодарностями -->
+    <div id="thanks" class="page hidden">
+        <h2>Credits</h2>
+        <p>
+            Мы хотим поблагодарить всех, кто помог создать эту игру:<br>
+            - Разработчиков за код<br>
+            - Дизайнеров за графику<br>
+            - Тестировщиков за помощь в поиске ошибок
+        </p>
+        <button onclick="showPage('home-page')">Назад</button>
+    </div>
+
+    <!-- Страница игры -->
+    <div id="game" class="page hidden">
+        <div id="game-container">
+            <div class="sun"></div> <!-- Новый элемент для солнца -->
+            <div id="champagne-bottle-1" class="bottle">
+                <div class="neck"></div>
+                <div class="body"></div>
+                <div class="label"></div>
+            </div>
+            <div id="champagne-bottle-2" class="bottle">
+                <div class="neck"></div>
+                <div class="body"></div>
+                <div class="label"></div>
+            </div>
+            <div id="champagne-bottle-3" class="bottle">
+                <div class="neck"></div>
+                <div class="body"></div>
+                <div class="label"></div>
+            </div>
+            <div id="player" class="player"></div>
+        </div>
+        <div id="score-panel">
+            <span id="scores-label">SCORES:</span>
+            <span id="score-value">0</span>
+        </div>
+        <div id="game-over-modal" class="modal hidden">
+            <div class="modal-content">
+                <span id="game-over-text">GAME OVER</span>
+                <span id="final-score-text">YOUR SCORES: 0</span>
+                <button id="play-again-button" onclick="restartGame()">PLAY AGAIN</button>
+                <button class="menu-button" onclick="showPage('home-page')">BACK TO MENU</button>
+            </div>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
