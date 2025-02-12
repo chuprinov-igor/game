@@ -269,99 +269,6 @@ h1 span {
     display: block;
 }
 
-/* Мобильная версия */
-@media screen and (max-width: 768px) {
-    .player-image {
-        width: 80%; /* Ширина картинки равна 30% ширины экрана */
-        height: auto; /* Высота автоматически масштабируется пропорционально ширине */
-        right: -40%; /* Расположение по оси X: 5% от правого края экрана */
-        bottom: 10%; /* Расположение по оси Y: 10% от нижнего края экрана */
-        z-index: -1; /* Картинка за текстом */
-        position: absolute; /* Абсолютное позиционирование относительно родителя */
-    }
-
-    h1 {
-        font-size: 18vw; /* Размер шрифта равен 9% от ширины экрана */
-        text-shadow: 
-            2px 2px 0 #FF4500, 
-            -1px -1px 0 #FF4500, 
-            1px -1px 0 #FF4500, 
-            -1px 1px 0 #FF4500, 
-            1px 1px 0 #FF4500;
-        -webkit-text-stroke: 1px #000;
-        transform: rotate(0);
-        z-index: 2; /* Заголовок поверх картинки */
-        max-width: 90%; /* Ограничиваем ширину заголовка 90% ширины экрана */
-        text-align: center; /* Центрируем текст */
-    }
-
-    .bottle {
-        /* Ensure bottles are visible on smaller screens */
-        height: calc(var(--vh, 1vh) * 20); /* 20% of viewport height */
-        bottom: calc(var(--vh, 1vh) * 5); /* 5% from bottom */
-    }
-    
-    #game-container {
-        /* Ensure full height on mobile */
-        height: calc(var(--vh, 1vh) * 100);
-        overflow: hidden;
-    }
-
-}
-/* iOS Safari specific fixes */
-@supports (-webkit-touch-callout: none) {
-    .bottle {
-        /* Additional bottom spacing for iOS Safari */
-        bottom: calc(var(--vh, 1vh) * 8);
-    }
-    
-    #game-container {
-        /* Prevent bounce scroll on iOS */
-        position: fixed;
-    }
-}
-
-
-/* Landscape mode adjustments */
-@media screen and (max-height: 500px) {
-    #home-page {
-        justify-content: space-around;
-    }
-    
-    h1 {
-        margin-bottom: 10px;
-    }
-}
-
-
-/* button {
-    width: 80%; 
-    max-width: 300px;
-    margin: 10px 0;
-    padding: 15px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 10px;
-    font-family: 'Luckiest Guy';
-    background-color: #4a4e69;
-    color: #ffffff;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}*/
-
-
-/* button:hover {
-    background-color: #5a6b8c;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 8px rgba(0,0,0,0.2);
-}*/
-
-/* button:active {
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}*/
 
 
 button {
@@ -451,3 +358,82 @@ button.exit-button:active {
     transform: scale(0.95);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
+
+
+
+/* Мобильная версия */
+@media screen and (max-width: 768px) {
+    .player-image {
+        width: 80%; /* Ширина картинки равна 80% ширины экрана */
+        height: auto; /* Высота автоматически масштабируется пропорционально ширине */
+        right: -40%; /* Расположение по оси X: 4% от правого края экрана */
+        bottom: 10%; /* Расположение по оси Y: 10% от нижнего края экрана */
+        z-index: -1; /* Картинка за текстом */
+        position: absolute; /* Абсолютное позиционирование относительно родителя */
+    }
+
+    .player {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50%; /* Ширина картинки равна 80% ширины экрана */
+        /* height: 300px;  Высота игрока */
+        background: url('images/player.svg') no-repeat center center; /* Векторное изображение игрока */
+        background-size: contain; /* Масштабируем изображение */
+        z-index: 3; /* Игрок поверх всех элементов */
+    
+    }
+
+    h1 {
+        font-size: 18vw; /* Размер шрифта равен 9% от ширины экрана */
+        text-shadow: 
+            2px 2px 0 #FF4500, 
+            -1px -1px 0 #FF4500, 
+            1px -1px 0 #FF4500, 
+            -1px 1px 0 #FF4500, 
+            1px 1px 0 #FF4500;
+        -webkit-text-stroke: 1px #000;
+        transform: rotate(0);
+        z-index: 2; /* Заголовок поверх картинки */
+        max-width: 90%; /* Ограничиваем ширину заголовка 90% ширины экрана */
+        text-align: center; /* Центрируем текст */
+    }
+
+    .bottle {
+        /* Ensure bottles are visible on smaller screens */
+        height: calc(var(--vh, 1vh) * 20); /* 20% of viewport height */
+        bottom: calc(var(--vh, 1vh) * 5); /* 5% from bottom */
+    }
+    
+    #game-container {
+        /* Ensure full height on mobile */
+        height: calc(var(--vh, 1vh) * 100);
+        overflow: hidden;
+    }
+
+}
+/* iOS Safari specific fixes */
+@supports (-webkit-touch-callout: none) {
+    .bottle {
+        /* Additional bottom spacing for iOS Safari */
+        bottom: calc(var(--vh, 1vh) * 8);
+    }
+    
+    #game-container {
+        /* Prevent bounce scroll on iOS */
+        position: fixed;
+    }
+}
+
+
+/* Landscape mode adjustments 
+@media screen and (max-height: 500px) {
+    #home-page {
+        justify-content: space-around;
+    }
+    
+    h1 {
+        margin-bottom: 10px;
+    }
+}*/
