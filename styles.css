@@ -506,7 +506,7 @@ button.exit-button:active {
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 50%; /* Ширина картинки равна 80% ширины экрана */
+        width: 20%; /* Ширина картинки равна 80% ширины экрана */
         /* height: 300px;  Высота игрока */
         background: url('images/player.svg') no-repeat center center; /* Векторное изображение игрока */
         background-size: contain; /* Масштабируем изображение */
