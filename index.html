@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Save Dimasik's ASS</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
@@ -15,9 +15,13 @@
             <span>Dimasik's</span>
             <span>ASS!</span>
         </h1>
-        <button class="start-button" onclick="startGame()">START GAME</button>
-        <button class="about-button" onclick="showPage('rules')">ABOUT GAME</button>
-        <button class="exit-button" onclick="showPage('thanks')">CREDITS</button>
+   <!-- Контейнер для кнопок меню -->
+    <div class="menu-container">
+        <button class="start-button menu-button" onclick="startGame()">START GAME</button>
+        <button class="about-button menu-button" onclick="showPage('rules')">ABOUT GAME</button>
+        <button class="exit-button menu-button" onclick="showPage('thanks')">CREDITS</button>
+    </div>
+        
         <img src="images/player.svg" alt="Player" class="player-image">
     </div>
 
@@ -36,6 +40,8 @@ Every second counts—survive longer, score higher, and <br>
         </p>
         <button onclick="showPage('home-page')">Назад</button>
     </div>
+
+    
 
     <!-- Страница с благодарностями -->
     <div id="thanks" class="page hidden">
@@ -60,6 +66,8 @@ Stay tuned!
         </p>
         <button onclick="showPage('home-page')">Назад</button>
     </div>
+
+    
 
     <!-- Страница игры -->
     <div id="game" class="page hidden">
@@ -91,7 +99,7 @@ Stay tuned!
                 <span id="game-over-text">GAME OVER</span>
                 <span id="final-score-text">YOUR SCORES: 0</span>
                 <button id="play-again-button" onclick="restartGame()">PLAY AGAIN</button>
-                <button class="menu-button" onclick="showPage('home-page')">BACK TO MENU</button>
+                <button id="play-again-button" onclick="showPage('home-page')">BACK TO MENU</button>
             </div>
         </div>
     </div>
