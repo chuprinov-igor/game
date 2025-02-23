@@ -302,6 +302,17 @@ function handleSwipe() {
     }
 }
 
+// Add this script to your JS file or in a <script> tag
+function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+}
+
+// Set on load and resize
+window.addEventListener('load', setVH);
+window.addEventListener('resize', setVH);
+
+
 /*// Инициализация игры
 resetPlayer();
 moveBottles();
