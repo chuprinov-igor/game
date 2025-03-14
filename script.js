@@ -1,94 +1,106 @@
 // Глобальные переменные
-let gameStarted = false; // Изначально игра не запущена
-
+let gameStarted = false;
 const player = document.getElementById('player');
 const bottles = [
     document.getElementById('champagne-bottle-1'),
     document.getElementById('champagne-bottle-2'),
     document.getElementById('champagne-bottle-3')
 ];
-let playerX = window.innerWidth / 2 - 25; // Центр экрана
+let playerX = window.innerWidth / 2 - 25;
 let playerY = 0;
-let playerSpeed = 2; // Начальная скорость падения игрока
-let bottleSpeed = 1; // Начальная скорость движения бутылок
+let playerSpeed = 2;
+let bottleSpeed = 1;
 let score = 0;
 let startTime = Date.now();
 let scoreInterval;
 let passes = 0;
-const maxPlayerSpeed = 64; // Максимальная скорость падения игрока
-const maxBottleSpeed = 10; // Максимальная скорость движения бутылок
+const maxPlayerSpeed = 64;
+const maxBottleSpeed = 10;
 const gameOverModal = document.getElementById('game-over-modal');
 const finalScoreText = document.getElementById('final-score-text');
+let isGamePaused = false;
+let animationFrameId = null;
+const orientationModal = document.getElementById('orientation-modal');
+let bottleAnimationIds = [];
 
-/* Add this JavaScript to your script.js file */
+// Установка высоты viewport
 function setViewportHeight() {
     let vh = window.innerHeight * 0.01;
     document.documentElement.style.setProperty('--vh', `${vh}px`);
 }
-// Set the height initially
 setViewportHeight();
-
-// Update the height on resize and orientation change
 window.addEventListener('resize', setViewportHeight);
 window.addEventListener('orientationchange', setViewportHeight);
 
-// Функция для показа нужной страницы
+// Показ страницы
 function showPage(pageId) {
-    // Скрываем все страницы
     const pages = document.querySelectorAll('.page');
-    pages.forEach(page => page.classList.add('hidden'));
-    pages.forEach(page => page.classList.remove('active'));
-
-    // Показываем выбранную страницу
+    pages.forEach(page => {
+        page.classList.add('hidden');
+        page.classList.remove('active');
+    });
     const selectedPage = document.getElementById(pageId);
     if (selectedPage) {
         selectedPage.classList.remove('hidden');
         selectedPage.classList.add('active');
     }
-    
-    // Если переключились с страницы игры, останавливаем игру
     if (pageId !== 'game') {
-        gameStarted = false; // Останавливаем игру
-        cancelAnimationFrame(gameLoop); // Останавливаем анимацию
-        clearInterval(scoreInterval); // Останавливаем таймер счетчика
+        gameStarted = false;
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        bottleAnimationIds.forEach(id => cancelAnimationFrame(id));
+        bottleAnimationIds = [];
+        clearInterval(scoreInterval);
+        orientationModal.style.display = 'none';
     }
-
 }
+
+// Старт игры
 function startGame() {
-    showPage('game'); // Переключиться на страницу игры
-    gameStarted = true; // Начинаем игру
-    resetPlayer(); // Сбросить состояние игрока
-    moveBottles(); // Запустить движение бутылок
-    gameLoop(); // Запустить основной игровой цикл
-    startScoreTimer(); // Запустить таймер для начисления очков
+    showPage('game');
+    gameStarted = true;
+    resetPlayer();
+    moveBottles();
+    animationFrameId = requestAnimationFrame(gameLoop);
+    startScoreTimer();
+    checkOrientation();
 }
 
-// Функция для перезапуска игры
+// Перезапуск игры
 function restartGame() {
-    // Здесь добавьте логику для сброса игры
-
-    showPage('game'); // Вернуться на страницу игры
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    bottleAnimationIds.forEach(id => cancelAnimationFrame(id));
+    bottleAnimationIds = [];
+    resetPlayer();
+    gameStarted = true;
+    isGamePaused = false;
+    moveBottles();
+    animationFrameId = requestAnimationFrame(gameLoop);
+    startScoreTimer();
+    updateScore();
 }
 
+// Сброс игрока
 function resetPlayer() {
     playerX = window.innerWidth / 2 - 25;
     playerY = 0;
-    playerSpeed = 2; // Сброс скорости падения игрока до начальной
-    bottleSpeed = 1; // Сброс скорости движения бутылок до начальной
-    passes = 0; // Обнуление количества проходов
-    clearInterval(scoreInterval); // Остановка таймера при сбросе
-    startTime = Date.now(); // Сброс времени начала игры
+    playerSpeed = 2;
+    bottleSpeed = 1;
+    passes = 0;
+    score = 0;
+    startTime = Date.now();
+    isGamePaused = false;
     updateScore();
-    hideGameOverModal(); // Скрыть модальное окно после перезапуска игры
-    // Возвращаем стили игрока и бутылок в исходное состояние
+    hideGameOverModal();
     player.style.top = `${playerY}px`;
     player.style.left = `${playerX}px`;
+    player.style.transform = 'translateX(-50%)';
     bottles.forEach(bottle => {
         bottle.style.left = '0px';
         bottle.style.bottom = '0px';
     });
 }
 
+// Движение бутылок
 function moveBottles() {
     const sections = [
         { start: 0, end: window.innerWidth / 3 * 1.25 },
@@ -101,222 +113,198 @@ function moveBottles() {
         bottle.style.left = `${bottleX}px`;
         bottle.style.bottom = '0';
 
-        let direction = 1; // 1 для движения вправо, -1 для движения влево
+        let direction = 1;
 
         function animateBottle() {
-            if (direction === 1 && bottleX >= sections[index].end - 50) {
-                direction = -1;
-            } else if (direction === -1 && bottleX <= sections[index].start) {
-                direction = 1;
+            if (gameStarted && !isGamePaused && gameOverModal.style.display === 'none') {
+                if (direction === 1 && bottleX >= sections[index].end - 50) {
+                    direction = -1;
+                } else if (direction === -1 && bottleX <= sections[index].start) {
+                    direction = 1;
+                }
+
+                bottleX += direction * bottleSpeed;
+                bottle.style.left = `${bottleX}px`;
+
+                checkCollision(bottle);
             }
-
-            bottleX += direction * bottleSpeed;
-            bottle.style.left = `${bottleX}px`;
-
-            checkCollision(bottle);
-            if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
-                requestAnimationFrame(animateBottle);
+            if (gameStarted) {
+                bottleAnimationIds[index] = requestAnimationFrame(animateBottle);
             }
         }
 
-        animateBottle();
+        bottleAnimationIds[index] = requestAnimationFrame(animateBottle);
     });
 }
 
+// Проверка столкновений
 function checkCollision(bottle) {
     const playerRect = player.getBoundingClientRect();
     const bottleRect = bottle.getBoundingClientRect();
-    // Проверяем столкновение между игроком и бутылкой
     if (
-    playerRect.right > bottleRect.left &&
-    playerRect.left < bottleRect.right &&
-    playerRect.bottom > bottleRect.top &&
-    playerRect.top < bottleRect.bottom
+        gameStarted && !isGamePaused && gameOverModal.style.display === 'none' &&
+        playerRect.right > bottleRect.left &&
+        playerRect.left < bottleRect.right &&
+        playerRect.bottom > bottleRect.top &&
+        playerRect.top < bottleRect.bottom
     ) {
+        console.log('Player width:', player.offsetWidth, 'Player height:', player.offsetHeight);
+        console.log('Bottle width:', bottle.offsetWidth, 'Bottle height:', bottle.offsetHeight);
+        console.log('Bottle left:', bottleRect.left, 'Bottle center:', bottleRect.left + bottleRect.width / 2);
 
-        // Сохраняем текущую позицию
         player.style.setProperty('--collision-start-x', `${playerX}px`);
         player.style.setProperty('--collision-start-y', `${playerY}px`);
+        
+        const bottleCenterX = bottleRect.left + (bottleRect.width / 2);
+       // const targetX = bottleCenterX - (player.offsetWidth / 2);
+        const targetX = bottleCenterX;
+        const targetY = bottleRect.bottom - player.offsetHeight;
+        
+        console.log('Target X:', targetX);
 
-
- // Устанавливаем новую целевую позицию
- const targetX = bottleRect.left + bottleRect.width / 2;
- const targetY = bottleRect.bottom - player.offsetHeight;
- 
- player.style.setProperty('--collision-end-x', `${targetX}px`);
- player.style.setProperty('--collision-end-y', `${targetY}px`);
- 
- // Добавляем класс анимации
- player.classList.add('player-collision');
- 
-  // Фиксируем финальную позицию после анимации
-  setTimeout(() => {
-    player.style.left = `${targetX}px`;
-    player.style.top = `${targetY}px`;
-    playerX = targetX;
-    playerY = targetY;
-    
-    showGameOverModal();
-    player.classList.remove('player-collision');
-}, 500);
-}
+        player.style.setProperty('--collision-end-x', `${targetX}px`);
+        player.style.setProperty('--collision-end-y', `${targetY}px`);
+        player.classList.add('player-collision');
+        setTimeout(() => {
+            player.style.left = `${targetX}px`;
+            player.style.top = `${targetY}px`;
+            playerX = targetX;
+            playerY = targetY;
+            player.classList.remove('player-collision');
+            showGameOverModal();
+        }, 500);
+    }
 }
 
-
+// Игровой цикл
 function gameLoop() {
-    if (!gameStarted || gameOverModal.style.display !== 'none') {
-        // Если игра не запущена или показано окно Game Over, выходим из функции
+    if (!gameStarted || isGamePaused || gameOverModal.style.display !== 'none') {
         return;
     }
-    playerY += playerSpeed * 2; // Удвоенная скорость падения игрока
+    playerY += playerSpeed * 2;
     player.style.top = `${playerY}px`;
 
-    // Проверка перехода через левую и правую границы экрана
     if (playerX < -25) {
         playerX = window.innerWidth - 25;
     } else if (playerX > window.innerWidth - 25) {
         playerX = -25;
     }
 
-    player.style.left = `${playerX}px`; // Обновляем стиль после проверки перехода
+    player.style.left = `${playerX}px`;
 
     if (playerY > window.innerHeight) {
         playerY = -50;
         passes++;
-        if (playerSpeed < maxPlayerSpeed) {
-            playerSpeed *= 1.4; // Увеличиваем скорость падения игрока после каждого прохода через экран, если она меньше максимальной
-        }
-        if (bottleSpeed < maxBottleSpeed) {
-            bottleSpeed *= 1.2; // Увеличиваем скорость движения бутылок после каждого прохода через экран, если она меньше максимальной
-        }
+        if (playerSpeed < maxPlayerSpeed) playerSpeed *= 1.4;
+        if (bottleSpeed < maxBottleSpeed) bottleSpeed *= 1.2;
         updateScore();
     }
 
-    if (gameStarted && !gameOverModal.style.display || gameOverModal.style.display === 'none') {
-        //if (gameStarted && !gameOverModal.style.display) {
-        requestAnimationFrame(gameLoop);
-    }
+    animationFrameId = requestAnimationFrame(gameLoop);
 }
 
+// Управление клавишами
 document.addEventListener('keydown', e => {
-    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
-        if (e.key === 'ArrowLeft') {
-            playerX -= 20;
-        } else if (e.key === 'ArrowRight') {
-            playerX += 20;
-        }
+    if (!isGamePaused && (!gameOverModal.style.display || gameOverModal.style.display === 'none')) {
+        if (e.key === 'ArrowLeft') playerX -= 20;
+        else if (e.key === 'ArrowRight') playerX += 20;
 
-        // Проверяем и корректируем координаты игрока с учетом переходов через границы
-        if (playerX < -25) {
-            playerX = window.innerWidth - 25;
-        } else if (playerX > window.innerWidth - 25) {
-            playerX = -25;
-        }
+        if (playerX < -25) playerX = window.innerWidth - 25;
+        else if (playerX > window.innerWidth - 25) playerX = -25;
 
         player.style.left = `${playerX}px`;
     }
 });
 
+// Обновление счета
 function updateScore() {
-    const currentTime = (Date.now() - startTime) / 1000; // Время в секундах
-    score = Math.floor(currentTime * (passes + 1)); // Обновляем счет
-    document.getElementById('score-value').textContent = score; // Обновляем счет на экране
+    const currentTime = (Date.now() - startTime) / 1000;
+    score = Math.floor(currentTime * (passes + 1));
+    document.getElementById('score-value').textContent = score;
 }
 
 function startScoreTimer() {
+    clearInterval(scoreInterval);
     scoreInterval = setInterval(() => {
-        if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
+        if (!isGamePaused && (!gameOverModal.style.display || gameOverModal.style.display === 'none')) {
             updateScore();
         }
     }, 1000);
 }
 
-// Функции для работы с модальным окном
+// Модальное окно
 function showGameOverModal() {
-    const finalScore = score;
-    finalScoreText.textContent = `YOUR SCORES: ${finalScore}`;
-    
-    // Remove collision animation class before showing modal
-    player.classList.remove('player-collision');
-    
+    finalScoreText.textContent = `YOUR SCORES: ${score}`;
     gameOverModal.style.display = 'flex';
-    cancelAnimationFrame(gameLoop);
-    clearInterval(scoreInterval);
+    pauseGame();
 }
-
-
 
 function hideGameOverModal() {
     gameOverModal.style.display = 'none';
 }
 
-document.getElementById('play-again-button').addEventListener('click', () => {
-    hideGameOverModal();
-    resetPlayer();
+// Управление паузой
+function pauseGame() {
+    isGamePaused = true;
+    gameStarted = false;
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    bottleAnimationIds.forEach(id => cancelAnimationFrame(id));
+    bottleAnimationIds = [];
+    clearInterval(scoreInterval);
+}
+
+function resumeGame() {
+    if (!isGamePaused) return;
+    isGamePaused = false;
+    gameStarted = true;
     moveBottles();
-    gameLoop();
+    animationFrameId = requestAnimationFrame(gameLoop);
     startScoreTimer();
-    updateScore();
-});
-// Глобальные переменные для отслеживания касаний
+}
+
+// Проверка ориентации
+function checkOrientation() {
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait && document.getElementById('game').classList.contains('active')) {
+        orientationModal.style.display = 'flex';
+        if (gameStarted && gameOverModal.style.display === 'none') pauseGame();
+    } else {
+        orientationModal.style.display = 'none';
+        if (isGamePaused && gameOverModal.style.display === 'none') resumeGame();
+    }
+}
+
+window.addEventListener('resize', checkOrientation);
+window.addEventListener('orientationchange', checkOrientation);
+window.addEventListener('load', checkOrientation);
+
+// Управление касаниями
 let touchStartX = 0;
-let touchEndX = 0;
-
-// Обработчик начала касания
-document.addEventListener('touchstart', (e) => {
-    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
-        touchStartX = e.touches[0].clientX; // Сохраняем начальную координату X
+document.addEventListener('touchstart', e => {
+    if (!isGamePaused && (!gameOverModal.style.display || gameOverModal.style.display === 'none')) {
+        touchStartX = e.touches[0].clientX;
     }
 });
 
-// Обработчик окончания касания
-document.addEventListener('touchend', (e) => {
-    if (!gameOverModal.style.display || gameOverModal.style.display === 'none') {
-        touchEndX = e.changedTouches[0].clientX; // Сохраняем конечную координату X
-        handleSwipe();
+document.addEventListener('touchend', e => {
+    if (!isGamePaused && (!gameOverModal.style.display || gameOverModal.style.display === 'none')) {
+        const touchEndX = e.changedTouches[0].clientX;
+        const deltaX = touchEndX - touchStartX;
+        const SWIPE_THRESHOLD = 50;
+        if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
+            if (deltaX > 0) playerX += 40;
+            else playerX -= 40;
+
+            if (playerX < -25) playerX = window.innerWidth - 25;
+            else if (playerX > window.innerWidth - 25) playerX = -25;
+
+            player.style.left = `${playerX}px`;
+        }
     }
 });
 
-// Функция для обработки свайпа
-function handleSwipe() {
-    const deltaX = touchEndX - touchStartX; // Разница между начальной и конечной точками
-    const SWIPE_THRESHOLD = 50; // Минимальное расстояние для считывания свайпа
-
-    if (Math.abs(deltaX) > SWIPE_THRESHOLD) {
-        if (deltaX > 0) {
-            // Свайп вправо
-            playerX += 40; // Перемещаем игрока вправо
-        } else {
-            // Свайп влево
-            playerX -= 40; // Перемещаем игрока влево
-        }
-
-        // Проверяем границы экрана
-        if (playerX < -25) {
-            playerX = window.innerWidth - 25;
-        } else if (playerX > window.innerWidth - 25) {
-            playerX = -25;
-        }
-
-        player.style.left = `${playerX}px`; // Обновляем позицию игрока
-    }
-}
-
-// Add this script to your JS file or in a <script> tag
-function setVH() {
-    let vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-}
-
-// Set on load and resize
-window.addEventListener('load', setVH);
-window.addEventListener('resize', setVH);
-
-
-/*// Инициализация игры
-resetPlayer();
-moveBottles();
-gameLoop();
-startScoreTimer(); // Запуск таймера для начисления очков
-updateScore(); // Обновление начального значения счета
-*/
+// Привязка кнопок
+document.querySelector('#play-again-button').addEventListener('click', () => {
+    hideGameOverModal();
+    restartGame();
+});
