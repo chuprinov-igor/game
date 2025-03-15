@@ -489,7 +489,7 @@ button {
 
 h1 {
     position: relative;
-    top: -28vh; /* Отступ от верха в процентах от высоты viewport */
+    top: -5vh; /* Отступ от верха в процентах от высоты viewport */
     font-size: 15vh; /* Размер шрифта в процентах от ширины viewport */
     margin-bottom: 2vh; /* Отступ снизу в процентах от высоты viewport */
     color: #FFD700;
@@ -628,13 +628,15 @@ button.exit-button:active {
             -webkit-text-stroke: 0.3vw #000; /* Увеличить толщину контура */
         
         transform: rotate(0);
-        top: -28vh; /* Отступ от верха в процентах от высоты viewport */
+        top: 10vh; /* Отступ от верха в процентах от высоты viewport */
         margin-bottom: 3vh; /* Увеличить отступ снизу */
         z-index: 2; /* Заголовок поверх картинки */
         max-width: 90%; /* Ограничиваем ширину заголовка 90% ширины экрана */
         text-align: center; /* Центрируем текст */
         letter-spacing: 0.3vw; /* Увеличить промежутки между буквами */
+
     }
+
     h1 span {
         display: block;
     }
