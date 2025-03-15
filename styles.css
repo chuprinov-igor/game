@@ -3,15 +3,6 @@
     --vh: 1vh;
 }
 
-/* Стили для главной страницы */
-#home-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Центрируем контент вертикально */
-    height: calc(var(--vh, 1vh) * 100);
-    position: relative;
-}
 
 body {
     margin: 0;
@@ -31,31 +22,14 @@ body {
     font-family: 'Luckiest Guy', cursive;
 }
 
-#rules h2, #thanks h2 {
-    position: absolute;
-    top: 5vh; /* Отступ 5vh от верха экрана */
-    left: 50%;
-    transform: translateX(-50%); /* Центрирование по горизонтали */
-    font-size: clamp(8vh, 10vw, 15vh);
-    text-shadow: 3px 3px 0 #ff4500, 1px -1px 0 #ff4500, 1px 1px 0 #ff4500;
-    -webkit-text-stroke: 0.2vw #000;
-    letter-spacing: 0.2vw;
-    text-align: center;
-    margin: 0; /* Убираем стандартные отступы */
-}
-
-/* Фиксация заголовка "HOW TO PLAY" */
 #rules h2 {
-    position: absolute;
-    top: 5vh; /* Отступ 5vh от верха экрана */
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: clamp(8vh, 10vw, 15vh);
+    font-size: clamp(8vh, 10vw, 15vh); /* Адаптивный размер шрифта */
     text-shadow: 3px 3px 0 #ff4500, 1px -1px 0 #ff4500, 1px 1px 0 #ff4500;
     -webkit-text-stroke: 0.2vw #000;
     letter-spacing: 0.2vw;
+    transform: rotate(-2deg);
     text-align: center;
-    margin: 0;
+    margin: 2vh 0;
 }
 
 #rules h4 {
@@ -97,10 +71,14 @@ body {
     font-family: 'Luckiest Guy', cursive;
 }
 
-/* Специфические стили для #thanks h2 */
 #thanks h2 {
-    color: white;
+    font-size: clamp(8vh, 10vw, 15vh);
     text-shadow: 3px 3px 0 #8B0000, 1px -1px 0 #8B0000, 1px 1px 0 #8B0000;
+    -webkit-text-stroke: 0.2vw #000;
+    letter-spacing: 0.2vw;
+    transform: rotate(-2deg);
+    text-align: center;
+    margin: 2vh 0;
 }
 
 #thanks p {
@@ -496,13 +474,8 @@ button {
     align-items: center;
     width: 90%;
     margin: 0 auto;
-    padding-top: 25vh; /* Отступ сверху, чтобы контент не перекрывал заголовок */
+    padding-top: 15vh; /* Отступ сверху, чтобы контент не перекрывал заголовок */
     flex-grow: 1;
-}
-
-/* Специфический отступ для страницы #rules */
-#rules .content-wrapper {
-    padding-top: 35vh; /* Увеличиваем отступ вниз от заголовка "HOW TO PLAY" */
 }
 
 .hidden {
@@ -516,7 +489,7 @@ button {
 
 h1 {
     position: relative;
-    top: -25vh; /* Отступ от верха в процентах от высоты viewport */
+    top: -28vh; /* Отступ от верха в процентах от высоты viewport */
     font-size: 15vh; /* Размер шрифта в процентах от ширины viewport */
     margin-bottom: 2vh; /* Отступ снизу в процентах от высоты viewport */
     color: #FFD700;
@@ -717,14 +690,9 @@ button.exit-button:active {
         font-size: clamp(6vh, 8vw, 10vh);
         top: 5vh; /* Сохраняем отступ 5vh */
     }
-    
 
     .content-wrapper {
         padding-top: 12vh; /* Уменьшаем отступ для мобильных, чтобы контент не уходил слишком низко */
-    }
-
-    #rules .content-wrapper {
-        padding-top: 20vh; /* Уменьшаем отступ для мобильных, но все еще больше стандартного */
     }
 }
 
@@ -758,17 +726,13 @@ button.exit-button:active {
         justify-content: center;
     }
 
-    #rules h2, #thanks h2 {
+  #rules h2, #thanks h2 {
         font-size: clamp(6vh, 8vw, 10vh);
         top: 5vh; /* Сохраняем отступ 5vh */
     }
-    
 
     .content-wrapper {
         padding-top: 10vh; /* Еще меньше отступ в ландшафтной ориентации */
-    }
-    #rules .content-wrapper {
-        padding-top: 18vh; /* Еще меньше отступ в ландшафтной ориентации */
     }
 
     .back-button {
