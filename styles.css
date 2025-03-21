@@ -2,11 +2,19 @@
 :root {
     --vh: 1vh;
 }
+/* Главная страница как контейнер с обрезкой */
+#home-page {
+    overflow-x: hidden; /* Отключаем горизонтальную прокрутку */
+    overflow-y: hidden; 
 
+    position: relative; /* Для правильного позиционирования дочерних элементов */
+}
 
 body {
     margin: 0;
-    overflow: hidden;
+    overflow-x: hidden; /* Запрещаем горизонтальную прокрутку */
+    overflow-y: hidden; 
+
     position: relative;
     background: url('images/background.svg') no-repeat center center fixed; /* Добавляем векторное изображение */
     background-size: cover; /* Масштабируем изображение, чтобы оно покрывало весь экран */
@@ -18,57 +26,110 @@ body {
 #rules {
     background: linear-gradient(135deg, #ff7e5f, #feb47b);
     color: white;
-    text-shadow: 2px 2px 0 #ff4500;
     font-family: 'Luckiest Guy', cursive;
+    padding: 2vh 5vw; /* Отступы по бокам */
+    overflow-y: auto; /* Прокрутка при необходимости */
 }
 
 #rules h2 {
-    font-size: clamp(8vh, 10vw, 15vh); /* Адаптивный размер шрифта */
+    font-size: clamp(8vh, 10vw, 15vh);
     text-shadow: 3px 3px 0 #ff4500, 1px -1px 0 #ff4500, 1px 1px 0 #ff4500;
     -webkit-text-stroke: 0.2vw #000;
     letter-spacing: 0.2vw;
     transform: rotate(-2deg);
     text-align: center;
-    margin: 2vh 0;
+    margin: 10vh 0 5vh 0;
+}
+/* Контейнер для контента */
+.rules-content {
+    max-width: 800px; /* Ограничиваем ширину */
+    margin: 0 auto; /* Центрируем */
 }
 
-#rules h4 {
-    font-size: clamp(4vh, 6vw, 6vh);
-    color: #FFD700;
-    text-shadow: 1px 1px 0 #ff4500;
-    text-align: center;
-    border: 2px solid #FF4500;
-    border-radius: 10px;
-    padding: 1vh 2vw;
-    background: rgba(0, 0, 0, 0.5);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    margin: 2vh 0;
+/* Секции правил */
+.rules-section {
+    margin-bottom: 4vh; /* Отступ между секциями */
+    background: rgba(0, 0, 0, 0.2); /* Полупрозрачный фон */
+    padding: 2vh 3vw; /* Внутренние отступы */
+    border-radius: 10px; /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Легкая тень */
 }
 
-#rules p {
-    font-size: clamp(2.5vh, 4vw, 4vh);
-    text-align: center;
+/* Подзаголовки секций */
+.rules-section h3 {
+    font-size: clamp(3vh, 4vw, 5vh);
+    color: #FFD700; /* Желтый цвет для акцента */
+    text-shadow: 2px 2px 0 #ff4500;
+    -webkit-text-stroke: 0.1vw #000;
+    letter-spacing: 0.15vw;
+    margin-bottom: 1vh;
+}
+
+/* Текст внутри секций */
+.rules-section p {
+    font-size: clamp(2vh, 3vw, 3vh);
     color: white;
     text-shadow: 1px 1px 0 #ff4500;
-    margin: 2vh 0;
-    line-height: 1.5;
+    line-height: 1.8; /* Увеличенный межстрочный интервал */
+    margin: 0;
 }
 
-#rules h3 {
+.rules-section ul {
+    list-style-type: none; /* Убираем стандартные маркеры */
+    padding-left: 0;
+    margin: 0;
+}
+
+.rules-section ul li {
+    font-size: clamp(2vh, 3vw, 3vh);
+    color: white;
+    text-shadow: 1px 1px 0 #ff4500;
+    line-height: 1.8;
+    position: relative;
+    padding-left: 3vw; /* Базовый отступ */
+}
+
+.rules-section ul li:before {
+    content: "❇️"; /* Новый символ "sparkle" */
+    position: absolute;
+    left: 0;
+    color: #FFD700; /* Желтый цвет */
+    text-shadow: 1px 1px 0 #ff4500; /* Тень */
+    font-size: 1.2em; /* Увеличенный размер иконки */
+}
+
+/* Выделение ключевых слов */
+.rules-section p strong,
+.rules-section ul li strong {
+    color: #FFD700; /* Желтый цвет */
+    text-shadow: 2px 2px 0 #ff4500;
+}
+
+/* Курсив для акцента */
+.rules-section p em {
+    font-style: italic;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 0 #ff4500;
+}
+
+/* Нижний заголовок */
+.rules-footer {
     font-size: clamp(6vh, 8vw, 8vh);
     color: #FFD700;
-    text-shadow: 3px 3px 0 #FF4500, 1px -1px 0 #FF4500, 1px 1px 0 #FF4500;
+    text-shadow: 3px 3px 0 #ff4500, 1px -1px 0 #ff4500, 1px 1px 0 #ff4500;
     -webkit-text-stroke: 0.2vw #000;
     letter-spacing: 0.2vw;
     text-align: center;
-    margin: 2vh 0;
+    margin: 5vh 0 5vh 0; /* Отступы сверху и снизу */
 }
+
 /* Стили для страницы благодарностей */
 #thanks {
-    background: linear-gradient(135deg, #8B0000, #FF4500);
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
     color: white;
-    text-shadow: 2px 2px 0 #8B0000;
     font-family: 'Luckiest Guy', cursive;
+    padding: 2vh 5vw; /* Отступы по бокам для читаемости */
+    overflow-y: auto; /* Прокрутка, если контент не помещается */
 }
 
 #thanks h2 {
@@ -78,16 +139,64 @@ body {
     letter-spacing: 0.2vw;
     transform: rotate(-2deg);
     text-align: center;
-    margin: 2vh 0;
+    margin: 10vh 0 5vh 0;
+}
+* Контейнер для контента */
+.thanks-content {
+    max-width: 800px; /* Ограничиваем ширину для удобства чтения */
+    margin: 0 auto; /* Центрируем */
 }
 
-#thanks p {
-    font-size: clamp(2vh, 3.5vw, 3vh);
-    text-align: justify;
+/* Секции благодарностей */
+.thanks-section {
+    margin-bottom: 4vh; /* Больше пространства между секциями */
+    background: rgba(0, 0, 0, 0.2); /* Полупрозрачный фон для выделения */
+    padding: 2vh 3vw; /* Внутренние отступы */
+    border-radius: 10px; /* Скругленные углы */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Легкая тень */
+}
+
+/* Подзаголовки секций */
+.thanks-section h3 {
+    font-size: clamp(3vh, 4vw, 5vh);
+    color: #FFD700; /* Желтый цвет для акцента */
+    text-shadow: 2px 2px 0 #8B0000;
+    -webkit-text-stroke: 0.1vw #000;
+    letter-spacing: 0.15vw;
+    margin-bottom: 1vh;
+}
+
+/* Текст внутри секций */
+.thanks-section p {
+    font-size: clamp(2vh, 3vw, 3vh);
     color: white;
     text-shadow: 1px 1px 0 #8B0000;
-    line-height: 1.6;
-    margin: 2vh 0;
+    line-height: 1.8; /* Увеличенный межстрочный интервал */
+    margin: 0; /* Убираем лишние отступы */
+}
+
+/* Выделение ключевых слов */
+.thanks-section p strong {
+    color: #FFD700; /* Желтый цвет для выделения */
+    text-shadow: 2px 2px 0 #FF4500;
+}
+
+/* Ссылки */
+.thanks-section p a {
+    color: #FFD700;
+    text-decoration: underline;
+    text-shadow: 1px 1px 0 #FF4500;
+}
+
+.thanks-section p a:hover {
+    color: #FFFFFF;
+}
+
+/* Курсив для акцента */
+.thanks-section p em {
+    font-style: italic;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 0 #FF4500;
 }
 
 /* Стили для кнопки "Back to Menu" */
@@ -95,6 +204,9 @@ body {
     width: 80%;
     max-width: 300px;
     padding: 2vh 0;
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    text-shadow: 2px 2px 0 #ff4500;
     font-size: clamp(3vh, 5vw, 5vh);
     border: none;
     border-radius: 15px;
@@ -106,11 +218,25 @@ body {
     cursor: pointer;
     margin: 2vh 0 5vh 0; /* Увеличиваем нижний отступ до 5vh */
 }
-
+/* Стили для кнопки "Back to Menu" */
 #rules .back-button {
     background: linear-gradient(135deg, #ff7e5f, #feb47b);
     color: white;
     text-shadow: 2px 2px 0 #ff4500;
+    width: 40vw;
+    max-width: 300px;
+    padding: 3vh;
+    font-size: 5vh;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Luckiest Guy', cursive;
+    text-transform: uppercase;
+    letter-spacing: 0.2vw;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin: 2vh auto 5vh auto;
+    display: block;
 }
 
 #rules .back-button:hover {
@@ -125,13 +251,27 @@ body {
 }
 
 #thanks .back-button {
-    background: linear-gradient(135deg, #8B0000, #FF4500);
+    background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Градиент как у кнопок на главной */
     color: white;
-    text-shadow: 2px 2px 0 #8B0000;
+    text-shadow: 2px 2px 0 #ff4500; /* Тень текста как у кнопок на главной */
+    width: 40vw; /* Как у menu-button */
+    max-width: 300px;
+    padding: 3vh;
+    font-size: 5vh;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Luckiest Guy', cursive;
+    text-transform: uppercase;
+    letter-spacing: 0.2vw;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    margin: 2vh auto 5vh auto; /* Центрируем кнопку */
+    display: block; /* Для центрирования через margin */
 }
 
 #thanks .back-button:hover {
-    background: linear-gradient(135deg, #FF4500, #8B0000);
+    background: linear-gradient(135deg, #ff4500, #ff7e5f); /* Эффект как у главной */
     transform: scale(1.05);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
 }
@@ -141,15 +281,16 @@ body {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+
 .player-image {
     position: absolute;
     right: 2vw; /* Отступ от правого края */
     bottom: 5%; /* Отступ от нижнего края */
-   // width: 58vh; /* Ширина в процентах от ширины viewport */
+
    height: 90vh;
    width: auto; /* Ширина в процентах от ширины viewport */
     
-   // height: auto;
+
     z-index: -1;
     animation: float 3s ease-in-out infinite;
 }
@@ -242,38 +383,29 @@ body {
 
 #score-panel {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 2vh; /* Относительный отступ сверху */
+    right: 2vw; /* Относительный отступ справа */
     color: #FFD700;
     font-family: 'Luckiest Guy', cursive;
     text-shadow: 
-        3px 3px 0 #FF4500,
-        -1px -1px 0 #FF4500, 
-        1px -1px 0 #FF4500, 
-        -1px 1px 0 #FF4500, 
-        1px 1px 0 #FF4500;
-    -webkit-text-stroke: 2px #000;
-    letter-spacing: 2px;
+        0.2vw 0.2vw 0 #FF4500, /* Относительные единицы для тени */
+        -0.1vw -0.1vw 0 #FF4500, 
+        0.1vw -0.1vw 0 #FF4500, 
+        -0.1vw 0.1vw 0 #FF4500, 
+        0.1vw 0.1vw 0 #FF4500;
+    -webkit-text-stroke: 0.1vw #000; /* Относительный контур */
+    letter-spacing: 0.2vw; /* Относительный интервал букв */
     transform: rotate(-2deg);
     text-align: center;
-    font-size: 60px;
-    letter-spacing: 0.2vw; /* Промежутки между буквами в процентах от ширины viewport */
-    /* Добавляем рамку */
-    border: 2px solid #FF4500; /* Цвет и толщина рамки */
-    border-radius: 10px; /* Скругление углов рамки */
-
-    /* Добавляем отступы внутри */
-    padding: 10px 20px; /* Отступы сверху/снизу и слева/справа */
-
-    /* Опционально: добавляем фон */
-    background: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Тень для объемности */
-
-    /* Центрируем блок по горизонтали */
+    font-size: clamp(6vh, 8vw, 10vh); /* Адаптивный размер шрифта */
+    border: 0.2vw solid #FF4500; /* Относительная толщина рамки */
+    border-radius: 1vw; /* Относительное скругление углов */
+    padding: 1vh 2vw; /* Относительные внутренние отступы */
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0.4vh 0.6vh rgba(0, 0, 0, 0.3); /* Относительная тень */
     display: inline-block;
-    margin: 20px auto;
-  
-    z-index: 4; /* Убедитесь, что панель счета находится поверх всех других элементов */
+    margin: 2vh auto; /* Относительный внешний отступ */
+    z-index: 4;
 }
 
 /* Стили для модального окна */
@@ -285,12 +417,14 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-   /* background-color: rgba(255, 255, 0, 0.3); Яркий желтый фон с прозрачностью */
   background-color: rgba(139, 69, 19, 0.3);  /* Темно-коричневый с прозрачностью */
-  /* background-color: rgba(210, 180, 140, 0.3);  Песочный коричневый с прозрачностью */
+ 
     justify-content: center;
     align-items: center;
 }
+
+
+
 
 .modal-content {
      background: linear-gradient(135deg, #ff7e5f, #feb47b); /* Градиент в стиле комиксов */
@@ -305,6 +439,48 @@ body {
     width: 90%; /* Адаптивная ширина */
 }
 
+/* Текст "PLEASE ROTATE YOUR DEVICE" */
+#rotation-text {
+    font-size: clamp(3vh, 5vw, 6vh); /* Адаптивный размер */
+    font-family: 'Luckiest Guy', cursive;
+    color: #FFD700; /* Желтый для акцента */
+    text-shadow: 
+        0.2vw 0.2vw 0 #ff4500, 
+        -0.1vw -0.1vw 0 #ff4500, 
+        0.1vw -0.1vw 0 #ff4500, 
+        -0.1vw 0.1vw 0 #ff4500, 
+        0.1vw 0.1vw 0 #ff4500;
+    -webkit-text-stroke: 0.1vw #000; /* Черный контур */
+    letter-spacing: 0.2vw;
+    text-transform: uppercase;
+    margin-bottom: 2vh; /* Отступ снизу */
+}
+
+/* Иконка со стрелкой */
+#rotation-icon {
+    margin: 2vh 0; /* Отступы сверху и снизу для пространства */
+}
+
+#rotation-icon svg {
+    width: clamp(50px, 15vw, 80px); /* Адаптивный размер */
+    height: clamp(50px, 15vw, 80px); /* Соответствие ширине */
+    transition: transform 0.3s ease; /* Плавная анимация */
+}
+
+#rotation-icon svg:hover {
+    transform: rotate(15deg); /* Легкий поворот при наведении */
+}
+
+/* Подтекст "For best experience..." */
+#rotation-subtext {
+    font-size: clamp(1.5vh, 2.5vw, 3vh); /* Меньший адаптивный размер */
+    font-family: 'Luckiest Guy', cursive;
+    color: #ffffff; /* Белый цвет */
+    text-shadow: 0.1vw 0.1vw 0 #ff4500; /* Меньшая тень */
+    letter-spacing: 0.15vw;
+    text-transform: uppercase;
+    margin-top: 2vh; /* Отступ сверху */
+}
 
 #game-over-text {
     font-size: 10vh; /* Адаптивный размер шрифта */
@@ -463,7 +639,7 @@ button {
     height: calc(var(--vh, 1vh) * 100);
     transition: opacity 0.5s ease;
     padding: 2vh 0;
-    overflow-y: auto;
+    overflow-y: hidden;
     position: relative; /* Для абсолютного позиционирования дочерних элементов */
 }
 
@@ -590,6 +766,42 @@ button.exit-button:active {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
+/* Медиа-запрос для мобильных устройств */
+@media screen and (max-width: 768px) {
+    .thanks-section h3 {
+        font-size: clamp(2.5vh, 3.5vw, 4vh);
+    }
+
+    .thanks-section p {
+        font-size: clamp(1.8vh, 2.5vw, 2.5vh);
+        line-height: 1.6;
+    }
+
+    #thanks .back-button {
+        width: 80vw;
+        font-size: 4vh;
+        padding: 2vh;
+    }
+    .rules-section h3 {
+        font-size: clamp(2.5vh, 3.5vw, 4vh);
+    }
+
+    .rules-section p,
+    .rules-section ul li {
+        font-size: clamp(1.8vh, 2.5vw, 2.5vh);
+        line-height: 1.6;
+    }
+
+    .rules-footer {
+        font-size: clamp(4vh, 6vw, 6vh);
+    }
+
+    #rules .back-button {
+        width: 80vw;
+        font-size: 4vh;
+        padding: 2vh;
+    }
+}
 
 
 /* Мобильная версия */
@@ -718,9 +930,18 @@ button.exit-button:active {
         font-size: clamp(2.5vh, 4vw, 4vh);
         margin: 2vh 0 8vh 0; /* Увеличиваем нижний отступ до 8vh на мобильных */
     }
+
+    .rules-section ul li {
+        padding-left: 6vw; /* Увеличиваем отступ для текста */
+    }
+
+    .rules-section ul li:before {
+        left: 1vw; /* Сдвигаем эмодзи чуть вправо от края */
+        font-size: 1em; /* Уменьшаем размер эмодзи для компактности */
+    }
 }
 
-}
+
 
 /* Медиа-запрос для ландшафтной ориентации на мобильных */
 @media screen and (max-width: 768px) and (orientation: landscape) {
@@ -753,6 +974,17 @@ button.exit-button:active {
         bottom: 10%; /* Расположение по оси Y: 10% от нижнего края экрана */
         z-index: -1; /* Картинка за текстом */
         position: absolute; /* Абсолютное позиционирование относительно родителя */
+    }
+
+
+    #thanks p {
+        text-align: left; /* Сохраняем выравнивание влево */
+        padding-left: 5vw;
+    }
+    
+    #thanks .back-button {
+        width: 80vw; /* Как у menu-button на мобильных */
+        font-size: 4vh;
     }
 
     h1 {
