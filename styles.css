@@ -360,10 +360,6 @@ body {
 
 }
 
-#player, .bottle {
-    outline: 2px solid red; /* Временная граница для отладки */
-}
-
 @keyframes collisionMove {
     from {
         left: var(--collision-start-x);
