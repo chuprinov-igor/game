@@ -20,7 +20,6 @@ const gameOverModal = document.getElementById('game-over-modal');
 const finalScoreText = document.getElementById('final-score-text');
 let isGamePaused = false;
 let animationFrameId = null;
-const orientationModal = document.getElementById('orientation-modal');
 let bottleAnimationIds = [];
 
 // Установка высоты viewport
@@ -44,13 +43,17 @@ function showPage(pageId) {
         selectedPage.classList.remove('hidden');
         selectedPage.classList.add('active');
     }
-    if (pageId !== 'game') {
-        gameStarted = false;
-        if (animationFrameId) cancelAnimationFrame(animationFrameId);
-        bottleAnimationIds.forEach(id => cancelAnimationFrame(id));
-        bottleAnimationIds = [];
-        clearInterval(scoreInterval);
-        orientationModal.style.display = 'none';
+}
+
+// Проверка ориентации
+function checkOrientation() {
+    const isPortrait = window.innerHeight > window.innerWidth;
+    if (isPortrait) {
+        bottles[1].style.display = 'none'; // Скрываем вторую бутылку
+        bottles[2].style.display = 'none'; // Скрываем третью бутылку
+    } else {
+        bottles[1].style.display = 'block'; // Показываем вторую бутылку
+        bottles[2].style.display = 'block'; // Показываем третью бутылку
     }
 }
 
@@ -77,6 +80,7 @@ function restartGame() {
     animationFrameId = requestAnimationFrame(gameLoop);
     startScoreTimer();
     updateScore();
+    checkOrientation();
 }
 
 // Сброс игрока
@@ -102,13 +106,19 @@ function resetPlayer() {
 
 // Движение бутылок
 function moveBottles() {
-    const sections = [
-        { start: 0, end: window.innerWidth / 3 * 1.25 },
-        { start: window.innerWidth / 3 * 0.75, end: window.innerWidth / 3 * 2.25 },
-        { start: window.innerWidth / 3 * 1.75, end: window.innerWidth }
-    ];
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const activeBottles = isPortrait ? bottles.slice(0, 1) : bottles; // В портретном режиме только 1 бутылка
+    const bottleCount = activeBottles.length;
 
-    bottles.forEach((bottle, index) => {
+    const sections = [];
+    for (let i = 0; i < bottleCount; i++) {
+        sections.push({
+            start: (window.innerWidth / bottleCount) * i * 0.75,
+            end: (window.innerWidth / bottleCount) * (i + 1) * 1.25
+        });
+    }
+
+    activeBottles.forEach((bottle, index) => {
         let bottleX = Math.random() * (sections[index].end - sections[index].start) + sections[index].start;
         bottle.style.left = `${bottleX}px`;
         bottle.style.bottom = '0';
@@ -148,20 +158,13 @@ function checkCollision(bottle) {
         playerRect.bottom > bottleRect.top &&
         playerRect.top < bottleRect.bottom
     ) {
-        console.log('Player width:', player.offsetWidth, 'Player height:', player.offsetHeight);
-        console.log('Bottle width:', bottle.offsetWidth, 'Bottle height:', bottle.offsetHeight);
-        console.log('Bottle left:', bottleRect.left, 'Bottle center:', bottleRect.left + bottleRect.width / 2);
-
         player.style.setProperty('--collision-start-x', `${playerX}px`);
         player.style.setProperty('--collision-start-y', `${playerY}px`);
         
         const bottleCenterX = bottleRect.left + (bottleRect.width / 2);
-       // const targetX = bottleCenterX - (player.offsetWidth / 2);
         const targetX = bottleCenterX;
         const targetY = bottleRect.bottom - player.offsetHeight;
         
-        console.log('Target X:', targetX);
-
         player.style.setProperty('--collision-end-x', `${targetX}px`);
         player.style.setProperty('--collision-end-y', `${targetY}px`);
         player.classList.add('player-collision');
@@ -262,18 +265,7 @@ function resumeGame() {
     startScoreTimer();
 }
 
-// Проверка ориентации
-function checkOrientation() {
-    const isPortrait = window.innerHeight > window.innerWidth;
-    if (isPortrait && document.getElementById('game').classList.contains('active')) {
-        orientationModal.style.display = 'flex';
-        if (gameStarted && gameOverModal.style.display === 'none') pauseGame();
-    } else {
-        orientationModal.style.display = 'none';
-        if (isGamePaused && gameOverModal.style.display === 'none') resumeGame();
-    }
-}
-
+// События изменения ориентации и размера окна
 window.addEventListener('resize', checkOrientation);
 window.addEventListener('orientationchange', checkOrientation);
 window.addEventListener('load', checkOrientation);
