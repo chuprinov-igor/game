@@ -2,6 +2,7 @@
 :root {
     --vh: 1vh;
 }
+
 /* Главная страница как контейнер с обрезкой */
 #home-page {
     overflow-x: hidden; /* Отключаем горизонтальную прокрутку */
@@ -360,6 +361,8 @@ body {
 
 }
 
+
+
 @keyframes collisionMove {
     from {
         left: var(--collision-start-x);
@@ -435,48 +438,7 @@ body {
     width: 90%; /* Адаптивная ширина */
 }
 
-/* Текст "PLEASE ROTATE YOUR DEVICE" */
-#rotation-text {
-    font-size: clamp(3vh, 5vw, 6vh); /* Адаптивный размер */
-    font-family: 'Luckiest Guy', cursive;
-    color: #FFD700; /* Желтый для акцента */
-    text-shadow: 
-        0.2vw 0.2vw 0 #ff4500, 
-        -0.1vw -0.1vw 0 #ff4500, 
-        0.1vw -0.1vw 0 #ff4500, 
-        -0.1vw 0.1vw 0 #ff4500, 
-        0.1vw 0.1vw 0 #ff4500;
-    -webkit-text-stroke: 0.1vw #000; /* Черный контур */
-    letter-spacing: 0.2vw;
-    text-transform: uppercase;
-    margin-bottom: 2vh; /* Отступ снизу */
-}
 
-/* Иконка со стрелкой */
-#rotation-icon {
-    margin: 2vh 0; /* Отступы сверху и снизу для пространства */
-}
-
-#rotation-icon svg {
-    width: clamp(50px, 15vw, 80px); /* Адаптивный размер */
-    height: clamp(50px, 15vw, 80px); /* Соответствие ширине */
-    transition: transform 0.3s ease; /* Плавная анимация */
-}
-
-#rotation-icon svg:hover {
-    transform: rotate(15deg); /* Легкий поворот при наведении */
-}
-
-/* Подтекст "For best experience..." */
-#rotation-subtext {
-    font-size: clamp(1.5vh, 2.5vw, 3vh); /* Меньший адаптивный размер */
-    font-family: 'Luckiest Guy', cursive;
-    color: #ffffff; /* Белый цвет */
-    text-shadow: 0.1vw 0.1vw 0 #ff4500; /* Меньшая тень */
-    letter-spacing: 0.15vw;
-    text-transform: uppercase;
-    margin-top: 2vh; /* Отступ сверху */
-}
 
 #game-over-text {
     font-size: 10vh; /* Адаптивный размер шрифта */
@@ -810,19 +772,7 @@ button.exit-button:active {
         z-index: -1; /* Картинка за текстом */
         position: absolute; /* Абсолютное позиционирование относительно родителя */
     }
-#orientation-modal .modal-content {
-        padding: 20px;
-    }
-    #rotation-text {
-        font-size: 24px;
-    }
-    #rotation-subtext {
-        font-size: 16px;
-    }
-    #rotation-icon svg {
-        width: 80px;
-        height: 80px;
-    }
+
  
 
     h1 {
@@ -877,10 +827,11 @@ button.exit-button:active {
         top: 0;
         left: 50%;
         transform: translateX(-50%);
-        width: 30%; /* Ширина игрока */
-        aspect-ratio: 2 / 3; /* Соотношение сторон: ширина / высота = 2 / 3 */
-        background: url('images/player.svg') no-repeat center center; /* Векторное изображение игрока */
-        background-size: cover; /* Масштабируем изображение */
+        width: 45vw;
+      /*  width: auto;  Ширина в процентах от ширины viewport */
+        height: auto;
+        background-size: contain; /* Масштабируем изображение */
+        background-position: center center; /* Центрируем изображение */
         z-index: 3; /* Игрок поверх всех элементов */
     
     }
